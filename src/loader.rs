@@ -21,14 +21,14 @@ pub trait ResourceReader {
 }
 
 /// A [`ResourceReader`] that reads from [`File`] handles.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct FilesystemResourceReader;
 
-impl FilesystemResourceReader {
-    fn new() -> Self {
-        Self
-    }
-}
+// impl FilesystemResourceReader {
+//     fn new() -> Self {
+//         Self
+//     }
+// }
 
 impl ResourceReader for FilesystemResourceReader {
     type Resource = File;
@@ -60,13 +60,13 @@ pub struct Loader<
     reader: Reader,
 }
 
-impl Loader {
+impl<Cache: ResourceCache + Default, Reader: ResourceReader + Default> Loader<Cache, Reader> {
     /// Creates a new loader, creating a default resource cache and reader
     /// ([`DefaultResourceCache`] & [`FilesystemResourceReader`] respectively) in the process.
     pub fn new() -> Self {
         Self {
-            cache: DefaultResourceCache::new(),
-            reader: FilesystemResourceReader::new(),
+            cache: Cache::default(),
+            reader: Reader::default(),
         }
     }
 }
